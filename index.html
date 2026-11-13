@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مُترجم PDF</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--ink:#172033;--muted:#687386;--line:#e5e9f1;--brand:#6257e8;--brand2:#4d43ce;--soft:#f0efff;--ok:#16845b;--bad:#c23b4a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Tahoma,Arial,sans-serif}
+header{padding:22px max(20px,calc((100% - 1080px)/2));background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:12px;font-weight:800;font-size:20px}.mark{width:42px;height:42px;border-radius:13px;background:var(--soft);display:grid;place-items:center;color:var(--brand);font-size:22px}
+.tag{font-size:12px;color:var(--brand);background:var(--soft);padding:7px 11px;border-radius:30px}
+main{max-width:900px;margin:42px auto;padding:0 18px}.intro{text-align:center;margin-bottom:28px}.intro h1{font-size:clamp(27px,4vw,38px);margin:0 0 12px}.intro p{color:var(--muted);line-height:1.8;margin:0}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px;box-shadow:0 12px 35px #202c4b0a}
+.upload{border:2px dashed #c9c8f3;background:#fafaff;border-radius:17px;padding:30px 18px;text-align:center;cursor:pointer;transition:.2s}
+.upload:hover,.upload.drag{border-color:var(--brand);background:#f4f3ff}.upload .icon{font-size:35px;color:var(--brand)}.upload strong{display:block;margin:9px 0}.muted{color:var(--muted);font-size:13px}
+input[type=file]{display:none}.filename{margin-top:12px;color:var(--ok);font-size:14px;overflow-wrap:anywhere}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}label{font-size:13px;font-weight:700;display:block;margin-bottom:8px}
+select{width:100%;padding:13px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink);font:inherit}
+.actions{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap}button{border:0;border-radius:12px;padding:14px 20px;font:inherit;font-weight:700;cursor:pointer}
+.primary{background:var(--brand);color:white;flex:1;min-width:180px}.primary:hover{background:var(--brand2)}.primary:disabled{opacity:.55;cursor:not-allowed}.secondary{background:#f1f3f8;color:var(--ink)}
+.progress-wrap{display:none;margin-top:22px}.progress-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:9px}.bar{height:9px;background:#edf0f5;border-radius:20px;overflow:hidden}.bar span{display:block;height:100%;width:0;background:var(--brand);transition:width .25s}
+.status{margin-top:12px;font-size:13px;color:var(--muted);line-height:1.7;white-space:pre-wrap}.result{display:none;margin-top:18px;padding:16px;border-radius:13px;background:#effaf5;color:#126b4a}.error{color:var(--bad)}
+.note{margin-top:20px;padding:15px 17px;background:#fff9e9;border:1px solid #f2e5bb;border-radius:13px;color:#715b20;font-size:12px;line-height:1.8}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:28px}
+@media(max-width:600px){main{margin:25px auto}.panel{padding:17px}.fields{grid-template-columns:1fr}.tag{display:none}}
+</style>
+</head>
+<body>
+<header><div class="logo"><div class="mark">文</div><span>مُترجم PDF</span></div><span class="tag">ترجمة المستندات</span></header>
+<main>
+  <section class="intro"><h1>ترجم ملفات PDF بسهولة</h1><p>ارفع مستندك، اختر اللغة، واحصل على نسخة مترجمة قابلة للتنزيل.</p></section>
+  <section class="panel">
+    <label>ملف PDF</label>
+    <div class="upload" id="drop">
+      <div class="icon">⇧</div><strong>اسحب ملف PDF إلى هنا أو اضغط للاختيار</strong>
+      <span class="muted">يدعم ملفات PDF النصية. الحد المقترح 15 ميغابايت.</span>
+      <div class="filename" id="filename"></div>
+    </div>
+    <input id="file" type="file" accept="application/pdf,.pdf">
+    <div class="fields">
+      <div><label for="from">لغة المستند</label><select id="from">
+        <option value="auto">اكتشاف تلقائي (تحديد يدوي أفضل)</option><option value="en">الإنجليزية</option><option value="fr">الفرنسية</option><option value="ar">العربية</option><option value="es">الإسبانية</option><option value="de">الألمانية</option><option value="tr">التركية</option><option value="it">الإيطالية</option><option value="pt">البرتغالية</option><option value="ru">الروسية</option><option value="zh">الصينية</option>
+      </select></div>
+      <div><label for="to">الترجمة إلى</label><select id="to">
+        <option value="ar">العربية</option><option value="en">الإنجليزية</option><option value="fr">الفرنسية</option><option value="es">الإسبانية</option><option value="de">الألمانية</option><option value="tr">التركية</option><option value="it">الإيطالية</option><option value="pt">البرتغالية</option><option value="ru">الروسية</option><option value="zh">الصينية</option>
+      </select></div>
+    </div>
+    <div class="actions"><button class="primary" id="translate" disabled>ترجمة الملف</button><button class="secondary" id="reset">إعادة ضبط</button></div>
+    <div class="progress-wrap" id="progress"><div class="progress-top"><span id="stage">جارٍ التحضير…</span><span id="percent">0%</span></div><div class="bar"><span id="bar"></span></div><div class="status" id="status"></div></div>
+    <div class="result" id="result"></div>
+    <div class="note"><b>تنبيه:</b> هذه نسخة أولية تستخرج النص من ملفات PDF النصية وتُنشئ ملفاً جديداً. لا تحافظ بعد على الصور والجداول أو التصميم الأصلي، ولا تدعم OCR للصفحات الممسوحة ضوئياً. الترجمة تتم عبر خدمة MyMemory الخارجية؛ لا ترفع مستندات سرية أو حساسة. قد لا يظهر النص العربي بشكل مثالي في ملف PDF الناتج في هذه النسخة.</div>
+  </section>
+</main>
+<footer>مُترجم PDF · نسخة تجريبية مجانية</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const fileInput=document.getElementById('file'),drop=document.getElementById('drop'),translateBtn=document.getElementById('translate');
+let selectedFile=null;
+function choose(f){if(!f)return;if(f.type!=='application/pdf'&&!f.name.toLowerCase().endsWith('.pdf')){alert('يرجى اختيار ملف PDF.');return;}selectedFile=f;document.getElementById('filename').textContent='✓ '+f.name;translateBtn.disabled=false;}
+drop.addEventListener('click',()=>fileInput.click());fileInput.addEventListener('change',e=>choose(e.target.files[0]));
+['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('drag')}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('drag')}));
+drop.addEventListener('drop',e=>choose(e.dataTransfer.files[0]));
+document.getElementById('reset').onclick=()=>{selectedFile=null;fileInput.value='';document.getElementById('filename').textContent='';translateBtn.disabled=true;document.getElementById('progress').style.display='none';document.getElementById('result').style.display='none';};
+function update(p,msg){document.getElementById('progress').style.display='block';document.getElementById('bar').style.width=p+'%';document.getElementById('percent').textContent=p+'%';document.getElementById('stage').textContent=msg;}
+function splitText(s,max=420){let out=[];while(s.length>max){let i=Math.max(s.lastIndexOf('. ',max),s.lastIndexOf(' ',max));if(i<100)i=max;out.push(s.slice(0,i));s=s.slice(i).trim();}if(s)out.push(s);return out;}
+async function translateText(text,from,to){
+ const chunks=splitText(text);let out=[];
+ for(const chunk of chunks){
+  const pair=(from==='auto'?'en':from)+'|'+to;
+  const url='https://api.mymemory.translated.net/get?q='+encodeURIComponent(chunk)+'&langpair='+encodeURIComponent(pair);
+  const r=await fetch(url);if(!r.ok)throw new Error('تعذر الاتصال بخدمة الترجمة.');
+  const j=await r.json();if(j.responseStatus!==200)throw new Error(j.responseDetails||'تعذر ترجمة جزء من النص.');
+  out.push(j.responseData.translatedText);
+ }
+ return out.join(' ');
+}
+translateBtn.onclick=async()=>{
+ if(!selectedFile)return;
+ translateBtn.disabled=true;document.getElementById('result').style.display='none';document.getElementById('status').textContent='';
+ try{
+  update(2,'قراءة ملف PDF…');
+  const data=await selectedFile.arrayBuffer(),pdf=await pdfjsLib.getDocument({data}).promise;
+  const pages=[];
+  for(let n=1;n<=pdf.numPages;n++){
+   const page=await pdf.getPage(n),content=await page.getTextContent();
+   const text=content.items.map(x=>x.str).join(' ').replace(/[ \t]+/g,' ').trim();
+   pages.push(text);
+   update(5+Math.round(n/pdf.numPages*15),'استخراج النص: الصفحة '+n+' من '+pdf.numPages);
+  }
+  if(!pages.some(x=>x.length))throw new Error('لم يتم العثور على نص قابل للاستخراج. قد يكون الملف ممسوحاً ضوئياً ويحتاج إلى OCR.');
+  const from=document.getElementById('from').value,to=document.getElementById('to').value,translated=[];
+  for(let i=0;i<pages.length;i++){
+   translated.push(pages[i]?await translateText(pages[i],from,to):'');
+   update(20+Math.round((i+1)/pages.length*65),'ترجمة الصفحة '+(i+1)+' من '+pages.length);
+  }
+  update(90,'إنشاء ملف PDF…');
+  const {jsPDF}=window.jspdf,doc=new jsPDF({unit:'mm',format:'a4'});
+  const rtl=to==='ar',width=180,lineH=7;
+  for(let i=0;i<translated.length;i++){
+   if(i)doc.addPage();
+   const text=translated[i]||' ';
+   doc.setFont('helvetica','normal');doc.setFontSize(11);
+   const lines=doc.splitTextToSize(text,width);let y=20;
+   for(const line of lines){if(y>280){doc.addPage();y=20;}doc.text(line,rtl?195:15,y,{align:rtl?'right':'left'});y+=lineH;}
+   doc.setFontSize(8);doc.text(String(i+1),105,290,{align:'center'});
+  }
+  doc.save('translated-'+selectedFile.name);
+  update(100,'اكتملت الترجمة.');
+  const result=document.getElementById('result');result.style.display='block';result.textContent='تم إنشاء ملف الترجمة وبدء تنزيله. تحقق من النص العربي بعد التنزيل.';
+ }catch(e){update(100,'توقفت العملية.');document.getElementById('status').textContent=e.message||'حدث خطأ غير متوقع.';document.getElementById('status').className='status error';}
+ finally{translateBtn.disabled=false;}
+};
+</script>
+</body></html>
